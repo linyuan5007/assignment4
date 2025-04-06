@@ -74,11 +74,19 @@ const width= [40,80,80,80,80,80,200];
 function IssueRow(props) {
     const issue = props.issue;
     {/****** Q2: Coding Starts here. Create a row of data in a variable******/}
+    const row = (
+      <View style={styles.row}>
+        <Text style={styles.cell}>{issue.id}</Text>
+        <Text style={styles.cell}>{issue.status}</Text>
+        <Text style={styles.cell}>{issue.owner}</Text>
+        <Text style={styles.cell}>{issue.title}</Text>
+      </View>
+    );
     {/****** Q2: Coding Ends here.******/}
     return (
       <>
       {/****** Q2: Start Coding here. Add Logic to render a row  ******/}
-      
+        {row}
       {/****** Q2: Coding Ends here. ******/}  
       </>
     );
@@ -91,14 +99,22 @@ function IssueRow(props) {
     );
 
     {/****** Q2: Start Coding here. Add Logic to initalize table header  ******/}
-
+    const header = (
+      <View style={styles.header}>
+        <Text style={styles.headerCell}>ID</Text>
+        <Text style={styles.headerCell}>Status</Text>
+        <Text style={styles.headerCell}>Owner</Text>
+        <Text style={styles.headerCell}>Title</Text>
+      </View>
+    );
     {/****** Q2: Coding Ends here. ******/}
     
     
     return (
     <View style={styles.container}>
     {/****** Q2: Start Coding here to render the table header/rows.**********/}
-    
+      {header}
+      {issueRows}
     {/****** Q2: Coding Ends here. ******/}
     </View>
     );
