@@ -65,15 +65,18 @@ class IssueFilter extends React.Component {
 
 
 
-const styles = StyleSheet.create({
-    container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
-  header: { height: 50, backgroundColor: '#537791' },
-  text: { textAlign: 'center' },
-  dataWrapper: { marginTop: -1 },
-  row: { height: 40, backgroundColor: '#E7E6E1' }
-  });
-
 const width= [40,80,80,80,80,80,200];
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
+  header: { flexDirection: 'row', height: 40, backgroundColor: '#537791' },
+  headerCell: { flex: 1, color: '#fff', textAlign: 'center', fontWeight: 'bold' },
+  row: { flexDirection: 'row', height: 40, backgroundColor: '#E7E6E1' },
+  cell: { flex: 1, textAlign: 'center', padding: 4 },
+  input: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, paddingHorizontal: 8, borderRadius: 5 },
+});
+
+
 
 
 
@@ -205,20 +208,43 @@ class BlackList extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     console.log("constructor called test")
     /****** Q4: Start Coding here. Create State to hold inputs******/
+    this.state = { name: '',};
+    this. handleNameChange = this.handleNameChange.bind(this);
     /****** Q4: Code Ends here. ******/
   }
   /****** Q4: Start Coding here. Add functions to hold/set state input based on changes in TextInput******/
+  handleNameChange(text) {
+    this.setState({ name: text });
+  }
   /****** Q4: Code Ends here. ******/
 
   async handleSubmit() {
   /****** Q4: Start Coding here. Create an issue from state variables and issue a query. Also, clear input field in front-end******/
+    const { name } = this.state;
+    const query = `mutation addToBlacklist($nameInput: String!) {
+      addToBlacklist(nameInput: $nameInput)
+    }`;
+    const data = await graphQLFetch(query, { nameInput: name.trim() });
+
+    if (data && data.addToBlacklist) {
+      alert(`"${name}" has been blacklisted.`);
+      this.setState({ name: '' });
+    }
   /****** Q4: Code Ends here. ******/
   }
 
   render() {
     return (
-      <View>
+      <View style={{ marginVertical: 16 }}>
       {/****** Q4: Start Coding here. Create TextInput field, populate state variables. Create a submit button, and on submit, trigger handleSubmit.*******/}
+        <Text style={{ fontWeight: 'bold', marginBottom: 8 }}>Blacklist a name:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter name to blacklist"
+          value={this.state.name}
+          onChangeText={this.handleNameChange}
+        />
+        <Button title="Blacklist Name" onPress={this.handleSubmit} />
       {/****** Q4: Code Ends here. ******/}
       </View>
     );
@@ -285,7 +311,6 @@ export default class IssueList extends React.Component {
       {/****** Q3: Code Ends here. ******/}
 
       {/****** Q4: Start Coding here. ******/}
-        <Text>Placeholder for blacklist</Text>
         <BlackList />
       {/****** Q4: Code Ends here. ******/}
       </ScrollView>     
