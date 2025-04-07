@@ -55,7 +55,7 @@ class IssueFilter extends React.Component {
       <>
       {/****** Q1: Start Coding here. ******/}
       <View style={styles.container}>
-        <Text style={styles.text}>[IssueFilter Placeholder]</Text>
+        <Text style={styles.text}>[IssueFilter Placeholder test]</Text>
       </View>
       {/****** Q1: Code ends here ******/}
       </>
@@ -88,6 +88,9 @@ function IssueRow(props) {
       <Text style={styles.cell}>{issue.id}</Text>
       <Text style={styles.cell}>{issue.status}</Text>
       <Text style={styles.cell}>{issue.owner}</Text>
+      <Text style={styles.cell}>{issue.effort}</Text>
+      <Text style={styles.cell}>{new Date(issue.created).toLocaleDateString()}</Text>
+      <Text style={styles.cell}>{issue.due ? new Date(issue.due).toLocaleDateString() : 'N/A'}</Text>
       <Text style={styles.cell}>{issue.title}</Text>
     </View>
   );
@@ -114,6 +117,9 @@ function IssueTable(props) {
       <Text style={styles.headerCell}>ID</Text>
       <Text style={styles.headerCell}>Status</Text>
       <Text style={styles.headerCell}>Owner</Text>
+      <Text style={styles.headerCell}>Effort</Text>
+      <Text style={styles.headerCell}>Created</Text>
+      <Text style={styles.headerCell}>Due</Text>
       <Text style={styles.headerCell}>Title</Text>
     </View>
   );
