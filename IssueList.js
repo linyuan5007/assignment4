@@ -126,14 +126,34 @@ function IssueRow(props) {
       super();
       this.handleSubmit = this.handleSubmit.bind(this);
       /****** Q3: Start Coding here. Create State to hold inputs******/
+      this.state = {
+        title: '',
+        owner: '',
+        effort: '',
+      };
       /****** Q3: Code Ends here. ******/
     }
   
     /****** Q3: Start Coding here. Add functions to hold/set state input based on changes in TextInput******/
+    handleTitleChange = (text) => this.setState({ title: text });
+    handleOwnerChange = (text) => this.setState({ owner: text });
+    handleEffortChange = (text) => this.setState({ effort: text });
     /****** Q3: Code Ends here. ******/
     
     handleSubmit() {
       /****** Q3: Start Coding here. Create an issue from state variables and call createIssue. Also, clear input field in front-end******/
+      const { title, owner, effort } = this.state;
+
+      const newIssue = {
+        title: title.trim(),
+        owner: owner.trim(),
+        effort: parseInt(effort, 10),
+        status: 'New',
+      };
+
+      this.props.createIssue(newIssue);
+
+      this.setState({ title: '', owner: '', effort: '' });
       /****** Q3: Code Ends here. ******/
     }
   
@@ -141,6 +161,26 @@ function IssueRow(props) {
       return (
           <View>
           {/****** Q3: Start Coding here. Create TextInput field, populate state variables. Create a submit button, and on submit, trigger handleSubmit.*******/}
+            <TextInput
+            style={styles.input}
+            placeholder="Title"
+            value={this.state.title}
+            onChangeText={this.handleTitleChange}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Owner"
+              value={this.state.owner}
+              onChangeText={this.handleOwnerChange}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Effort"
+              keyboardType="numeric"
+              value={this.state.effort}
+              onChangeText={this.handleEffortChange}
+            />
+            <Button title="Add Issue" onPress={this.handleSubmit} />
           {/****** Q3: Code Ends here. ******/}
           </View>
       );
