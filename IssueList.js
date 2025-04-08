@@ -1,5 +1,9 @@
+
 import React, {useState} from 'react';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+
 
 import {
   SafeAreaView,
@@ -65,24 +69,47 @@ class IssueFilter extends React.Component {
 
 
 
-const width= [40,80,80,80,80,80,200];
-const columnWidths = [40, 80, 80, 60, 100, 100, 400];
+const width= [40,80,80,80,100,100,200];
 
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
   header: { flexDirection: 'row', height: 40, backgroundColor: '#537791' },
-  row: { flexDirection: 'row', height: 40, backgroundColor: '#E7E6E1' },
-  input: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, paddingHorizontal: 8, borderRadius: 5 },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',   // Ensures cell grows vertically
+    minHeight: 40,              // Instead of fixed height
+    backgroundColor: '#E7E6E1',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+    borderRadius: 5,
+  },
+  label: {
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },  
   cell: {
+    flex: 1,
+    flexShrink: 1, // ⬅️ allows text to wrap if it overflows
     paddingVertical: 10,
     paddingHorizontal: 8,
     textAlign: 'center',
     borderRightWidth: 1,
     borderRightColor: '#ccc',
+    flexWrap: 'wrap',
+    maxWidth: 200,
   },
   
   headerCell: {
+    flex: 1,
+    flexShrink: 1, // ⬅️ same for header
     paddingVertical: 10,
     paddingHorizontal: 8,
     textAlign: 'center',
@@ -91,6 +118,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#537791',
     borderRightWidth: 1,
     borderRightColor: '#fff',
+    flexWrap: 'wrap',
+    maxWidth: 200,
   }
 });
 
@@ -116,7 +145,7 @@ function IssueRow(props) {
     {/****** Q2: Start Coding here. Add Logic to render a row  ******/}
     <View style={styles.row}>
       {cells.map((value, i) => (
-        <Text key={i} style={[styles.cell, { width: columnWidths[i] }]}>
+        <Text key={i} numberOfLines={0} style={[styles.cell, { width: width[i], flexWrap: 'wrap'}]}>
           {value}
         </Text>
       ))}
@@ -141,7 +170,7 @@ function IssueTable(props) {
   const header = (
     <View style={styles.header}>
       {headers.map((title, i) => (
-        <Text key={i} style={[styles.headerCell, { width: columnWidths[i] }]}>
+        <Text key={i} numberOfLines={0} style={[styles.headerCell, { width: width[i] }]}>
           {title}
         </Text>
       ))}
@@ -175,7 +204,10 @@ class IssueAdd extends React.Component {
       title: '',
       owner: '',
       effort: '',
+      due: new Date(),
+      showDatePicker: false,
     };
+    
     /****** Q3: Code Ends here. ******/
   }
 
@@ -183,51 +215,90 @@ class IssueAdd extends React.Component {
   handleTitleChange = (text) => this.setState({ title: text });
   handleOwnerChange = (text) => this.setState({ owner: text });
   handleEffortChange = (text) => this.setState({ effort: text });
+  handleDueDateChange = (event, selectedDate) => {
+    this.setState({ 
+      due: selectedDate || this.state.due, 
+      showDatePicker: false 
+    });
+  };
+  
   /****** Q3: Code Ends here. ******/
   
   handleSubmit() {
     /****** Q3: Start Coding here. Create an issue from state variables and call createIssue. Also, clear input field in front-end******/
-    const { title, owner, effort } = this.state;
+    const { title, owner, effort, due} = this.state;
+
+    if (!title.trim() || !owner.trim() || isNaN(effort)) {
+      alert('Please fill in all fields correctly.');
+      return;
+    }
 
     const newIssue = {
       title: title.trim(),
       owner: owner.trim(),
       effort: parseInt(effort, 10),
+      due: due,
       status: 'New',
     };
 
     this.props.createIssue(newIssue);
-
     this.setState({ title: '', owner: '', effort: '' });
     /****** Q3: Code Ends here. ******/
   }
   
   render() {
     return (
-        <View>
-        {/****** Q3: Start Coding here. Create TextInput field, populate state variables. Create a submit button, and on submit, trigger handleSubmit.*******/}
-          <TextInput
+      <View style={{ marginTop: 20, padding: 10 }}>
+      {/****** Q3: Start Coding here. Create TextInput field, populate state variables. Create a submit button, and on submit, trigger handleSubmit.*******/}
+        <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Title</Text>
+        <TextInput
           style={styles.input}
-          placeholder="Title"
+          placeholder="Enter issue title"
           value={this.state.title}
           onChangeText={this.handleTitleChange}
+        />
+
+        <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Owner</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter owner name"
+          value={this.state.owner}
+          onChangeText={this.handleOwnerChange}
+        />
+
+        <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Effort (hours)</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter effort estimate"
+          keyboardType="numeric"
+          value={this.state.effort}
+          onChangeText={this.handleEffortChange}
+        />
+
+        <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Due Date</Text>
+        <Button
+          title={this.state.due.toDateString()}
+          onPress={() => this.setState({ showDatePicker: true })}
+        />
+
+        {this.state.showDatePicker && (
+          <DateTimePicker
+            value={this.state.due}
+            mode="date"
+            display="default"
+            onChange={this.handleDueDateChange}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Owner"
-            value={this.state.owner}
-            onChangeText={this.handleOwnerChange}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Effort"
-            keyboardType="numeric"
-            value={this.state.effort}
-            onChangeText={this.handleEffortChange}
-          />
+        )}
+
+
+       
+
+
+        <View style={{ marginTop: 10 }}>
           <Button title="Add Issue" onPress={this.handleSubmit} />
-        {/****** Q3: Code Ends here. ******/}
         </View>
+      {/****** Q3: Code Ends here. ******/}
+      </View>
     );
   }
 }
@@ -268,16 +339,22 @@ class BlackList extends React.Component {
 
   render() {
     return (
-      <View style={{ marginVertical: 16 }}>
+      <View style={{ marginVertical: 16, paddingHorizontal: 16 }}>
       {/****** Q4: Start Coding here. Create TextInput field, populate state variables. Create a submit button, and on submit, trigger handleSubmit.*******/}
-        <Text style={{ fontWeight: 'bold', marginBottom: 8 }}>Blacklist a name:</Text>
+        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 10 }}>
+          Blacklist a name:
+        </Text>
+
         <TextInput
           style={styles.input}
           placeholder="Enter name to blacklist"
           value={this.state.name}
           onChangeText={this.handleNameChange}
         />
-        <Button title="Blacklist Name" onPress={this.handleSubmit} />
+
+        <View style={{ marginTop: 10 }}>
+          <Button title="Blacklist Name" onPress={this.handleSubmit} />
+        </View>
       {/****** Q4: Code Ends here. ******/}
       </View>
     );
