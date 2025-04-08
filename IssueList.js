@@ -66,14 +66,32 @@ class IssueFilter extends React.Component {
 
 
 const width= [40,80,80,80,80,80,200];
+const columnWidths = [40, 80, 80, 60, 100, 100, 400];
+
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
   header: { flexDirection: 'row', height: 40, backgroundColor: '#537791' },
-  headerCell: { flex: 1, color: '#fff', textAlign: 'center', fontWeight: 'bold' },
   row: { flexDirection: 'row', height: 40, backgroundColor: '#E7E6E1' },
-  cell: { flex: 1, textAlign: 'center', padding: 4 },
   input: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, paddingHorizontal: 8, borderRadius: 5 },
+  cell: {
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    textAlign: 'center',
+    borderRightWidth: 1,
+    borderRightColor: '#ccc',
+  },
+  
+  headerCell: {
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#fff',
+    backgroundColor: '#537791',
+    borderRightWidth: 1,
+    borderRightColor: '#fff',
+  }
 });
 
 
@@ -83,27 +101,33 @@ const styles = StyleSheet.create({
 function IssueRow(props) {
   const issue = props.issue;
   {/****** Q2: Coding Starts here. Create a row of data in a variable******/}
-  const row = (
-    <View style={styles.row}>
-      <Text style={styles.cell}>{issue.id}</Text>
-      <Text style={styles.cell}>{issue.status}</Text>
-      <Text style={styles.cell}>{issue.owner}</Text>
-      <Text style={styles.cell}>{issue.effort}</Text>
-      <Text style={styles.cell}>{new Date(issue.created).toLocaleDateString()}</Text>
-      <Text style={styles.cell}>{issue.due ? new Date(issue.due).toLocaleDateString() : 'N/A'}</Text>
-      <Text style={styles.cell}>{issue.title}</Text>
-    </View>
-  );
+  const cells = [
+    issue.id,
+    issue.status,
+    issue.owner,
+    issue.effort,
+    new Date(issue.created).toLocaleDateString(),
+    issue.due ? new Date(issue.due).toLocaleDateString() : 'N/A',
+    issue.title,
+  ];
   {/****** Q2: Coding Ends here.******/}
   return (
     <>
     {/****** Q2: Start Coding here. Add Logic to render a row  ******/}
-      {row}
+    <View style={styles.row}>
+      {cells.map((value, i) => (
+        <Text key={i} style={[styles.cell, { width: columnWidths[i] }]}>
+          {value}
+        </Text>
+      ))}
+    </View>
     {/****** Q2: Coding Ends here. ******/}  
     </>
   );
 }
   
+
+
   
 
 function IssueTable(props) {
@@ -112,27 +136,30 @@ function IssueTable(props) {
   );
 
   {/****** Q2: Start Coding here. Add Logic to initalize table header  ******/}
+  const headers = ['ID', 'Status', 'Owner', 'Effort', 'Created', 'Due', 'Title'];
+
   const header = (
     <View style={styles.header}>
-      <Text style={styles.headerCell}>ID</Text>
-      <Text style={styles.headerCell}>Status</Text>
-      <Text style={styles.headerCell}>Owner</Text>
-      <Text style={styles.headerCell}>Effort</Text>
-      <Text style={styles.headerCell}>Created</Text>
-      <Text style={styles.headerCell}>Due</Text>
-      <Text style={styles.headerCell}>Title</Text>
+      {headers.map((title, i) => (
+        <Text key={i} style={[styles.headerCell, { width: columnWidths[i] }]}>
+          {title}
+        </Text>
+      ))}
     </View>
   );
+
   {/****** Q2: Coding Ends here. ******/}
   
   
   return (
-  <View style={styles.container}>
-  {/****** Q2: Start Coding here to render the table header/rows.**********/}
-    {header}
-    {issueRows}
-  {/****** Q2: Coding Ends here. ******/}
-  </View>
+    <ScrollView horizontal>
+      <View style={styles.container}>
+      {/****** Q2: Start Coding here to render the table header/rows.**********/}
+        {header}
+        {issueRows}
+      {/****** Q2: Coding Ends here. ******/}
+      </View>
+    </ScrollView>
   );
 }
 
