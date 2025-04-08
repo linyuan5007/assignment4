@@ -2,8 +2,7 @@
 import React, {useState} from 'react';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
-
+import { TouchableOpacity } from 'react-native';
 
 import {
   SafeAreaView,
@@ -106,7 +105,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     maxWidth: 200,
   },
-  
   headerCell: {
     flex: 1,
     flexShrink: 1, // ⬅️ same for header
@@ -120,7 +118,14 @@ const styles = StyleSheet.create({
     borderRightColor: '#fff',
     flexWrap: 'wrap',
     maxWidth: 200,
-  }
+  },
+  dueDateButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 5,
+    marginBottom: 10,
+  },
 });
 
 
@@ -181,9 +186,23 @@ function IssueTable(props) {
   
   
   return (
+    
     <ScrollView horizontal>
       <View style={styles.container}>
       {/****** Q2: Start Coding here to render the table header/rows.**********/}
+        <Text
+          style={{
+            fontSize: 22,
+            fontWeight: 'bold',
+            textAlign: 'center',
+            marginBottom: 15,
+            color: '#2a3d66',
+          }}
+        >
+          📋 Current Issues
+        </Text>
+
+
         {header}
         {issueRows}
       {/****** Q2: Coding Ends here. ******/}
@@ -250,53 +269,69 @@ class IssueAdd extends React.Component {
     return (
       <View style={{ marginTop: 20, padding: 10 }}>
       {/****** Q3: Start Coding here. Create TextInput field, populate state variables. Create a submit button, and on submit, trigger handleSubmit.*******/}
-        <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Title</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter issue title"
-          value={this.state.title}
-          onChangeText={this.handleTitleChange}
+      <Text
+        style={{
+          fontSize: 22,
+          fontWeight: 'bold',
+          textAlign: 'center',
+          marginBottom: 15,
+          color: '#2a3d66',
+        }}
+      >
+        📝 Add New Issue
+      </Text>
+
+      <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Title:</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter issue title"
+        value={this.state.title}
+        onChangeText={this.handleTitleChange}
+      />
+
+      <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Owner:</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter owner name"
+        value={this.state.owner}
+        onChangeText={this.handleOwnerChange}
+      />
+
+      <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Effort (hours):</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter effort estimate"
+        keyboardType="numeric"
+        value={this.state.effort}
+        onChangeText={this.handleEffortChange}
+      />
+
+      <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Due Date:</Text>
+      <TouchableOpacity
+        onPress={() => this.setState({ showDatePicker: true })}
+        style={styles.dueDateButton}
+      >
+        <Text>{this.state.due.toDateString()}</Text>
+      </TouchableOpacity>
+
+      {this.state.showDatePicker && (
+        <DateTimePicker
+          value={this.state.due}
+          mode="date"
+          display="default"
+          onChange={(event, selectedDate) => {
+            if (event.type === "set") {
+              this.setState({ due: selectedDate, showDatePicker: false });
+            } else {
+              this.setState({ showDatePicker: false });
+            }
+          }}
         />
+      )}
 
-        <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Owner</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter owner name"
-          value={this.state.owner}
-          onChangeText={this.handleOwnerChange}
-        />
-
-        <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Effort (hours)</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter effort estimate"
-          keyboardType="numeric"
-          value={this.state.effort}
-          onChangeText={this.handleEffortChange}
-        />
-
-        <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Due Date</Text>
-        <Button
-          title={this.state.due.toDateString()}
-          onPress={() => this.setState({ showDatePicker: true })}
-        />
-
-        {this.state.showDatePicker && (
-          <DateTimePicker
-            value={this.state.due}
-            mode="date"
-            display="default"
-            onChange={this.handleDueDateChange}
-          />
-        )}
-
-
-       
-
-
-        <View style={{ marginTop: 10 }}>
-          <Button title="Add Issue" onPress={this.handleSubmit} />
-        </View>
+      <View style={{ marginTop: 10 }}>
+        <Button title="Add Issue" onPress={this.handleSubmit} />
+      </View>
       {/****** Q3: Code Ends here. ******/}
       </View>
     );
@@ -310,30 +345,24 @@ class BlackList extends React.Component {
   constructor() { 
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
-    console.log("constructor called test")
     /****** Q4: Start Coding here. Create State to hold inputs******/
     this.state = { name: '',};
-    this. handleNameChange = this.handleNameChange.bind(this);
+    this.setName = this.setName.bind(this);
     /****** Q4: Code Ends here. ******/
   }
   /****** Q4: Start Coding here. Add functions to hold/set state input based on changes in TextInput******/
-  handleNameChange(text) {
+  setName(text) {
     this.setState({ name: text });
   }
   /****** Q4: Code Ends here. ******/
 
   async handleSubmit() {
   /****** Q4: Start Coding here. Create an issue from state variables and issue a query. Also, clear input field in front-end******/
-    const { name } = this.state;
-    const query = `mutation addToBlacklist($nameInput: String!) {
+    console.log("handleSubmit has been called with state:", this.state.name)
+    const query = `mutation randomname($nameInput: String!) {
       addToBlacklist(nameInput: $nameInput)
     }`;
-    const data = await graphQLFetch(query, { nameInput: name.trim() });
-
-    if (data && data.addToBlacklist) {
-      alert(`"${name}" has been blacklisted.`);
-      this.setState({ name: '' });
-    }
+    const data = await graphQLFetch(query, { nameInput: this.state.name });
   /****** Q4: Code Ends here. ******/
   }
 
@@ -341,19 +370,34 @@ class BlackList extends React.Component {
     return (
       <View style={{ marginVertical: 16, paddingHorizontal: 16 }}>
       {/****** Q4: Start Coding here. Create TextInput field, populate state variables. Create a submit button, and on submit, trigger handleSubmit.*******/}
-        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 10 }}>
-          Blacklist a name:
+        {/* Section Title */}
+        <Text
+          style={{
+            fontSize: 22,
+            fontWeight: 'bold',
+            textAlign: 'center',
+            marginBottom: 15,
+            color: '#2a3d66',
+          }}
+        >
+         🔒 Blacklist a Name
+        </Text>
+
+
+        <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>
+          Name to Blacklist:
         </Text>
 
         <TextInput
           style={styles.input}
           placeholder="Enter name to blacklist"
-          value={this.state.name}
-          onChangeText={this.handleNameChange}
+          //value={this.state.name}
+          //onChangeText={this.handleNameChange}
+          onChangeText={text => this.setName(text)}
         />
 
         <View style={{ marginTop: 10 }}>
-          <Button title="Blacklist Name" onPress={this.handleSubmit} />
+          <Button title="Add to Blacklist" onPress={this.handleSubmit} />
         </View>
       {/****** Q4: Code Ends here. ******/}
       </View>
