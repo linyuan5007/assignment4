@@ -76,12 +76,12 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', height: 40, backgroundColor: '#537791' },
   row: {
     flexDirection: 'row',
-    alignItems: 'flex-start',   // Ensures cell grows vertically
-    minHeight: 40,              // Instead of fixed height
+    alignItems: 'stretch', // important for height sync
     backgroundColor: '#E7E6E1',
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderColor: '#ccc',
   },
+  
   input: {
     height: 40,
     borderColor: 'gray',
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
 
 
 function IssueRow(props) {
-  const issue = props.issue;
+  const { issue, index } = props;
   {/****** Q2: Coding Starts here. Create a row of data in a variable******/}
   const cells = [
     issue.id,
@@ -144,13 +144,17 @@ function IssueRow(props) {
     issue.due ? new Date(issue.due).toLocaleDateString() : 'N/A',
     issue.title,
   ];
+  const rowStyle = [
+    styles.row,
+    { backgroundColor: index % 2 === 0 ? '#F9F9F9' : '#E0E0E0' } // even/odd colors
+  ];
   {/****** Q2: Coding Ends here.******/}
   return (
     <>
     {/****** Q2: Start Coding here. Add Logic to render a row  ******/}
-    <View style={styles.row}>
+    <View style={rowStyle}>
       {cells.map((value, i) => (
-        <Text key={i} numberOfLines={0} style={[styles.cell, { width: width[i], flexWrap: 'wrap'}]}>
+        <Text key={i} numberOfLines={0} style={[styles.cell, { width: width[i], flexWrap: 'wrap' }]}>
           {value}
         </Text>
       ))}
@@ -162,13 +166,15 @@ function IssueRow(props) {
   
 
 
+
+
   
 
 function IssueTable(props) {
-  const issueRows = props.issues.map(issue =>
-    <IssueRow key={issue.id} issue={issue} />
+  const issueRows = props.issues.map((issue, index) =>
+    <IssueRow key={issue.id} issue={issue} index={index} />
   );
-
+  
   {/****** Q2: Start Coding here. Add Logic to initalize table header  ******/}
   const headers = ['ID', 'Status', 'Owner', 'Effort', 'Created', 'Due', 'Title'];
 
