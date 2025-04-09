@@ -149,6 +149,8 @@ const styles = StyleSheet.create({
 
 
 
+
+
 function IssueRow(props) {
   const { issue, index } = props;
   {/****** Q2: Coding Starts here. Create a row of data in a variable******/}
@@ -222,10 +224,8 @@ function IssueTable(props) {
             color: '#2a3d66',
           }}
         >
-          📋 Current Issues
+          📋 Display Issues
         </Text>
-
-
         {header}
         {issueRows}
       {/****** Q2: Coding Ends here. ******/}
@@ -473,7 +473,7 @@ export default class IssueList extends React.Component {
     return (
       <ScrollView contentContainerStyle={{ padding: 16}}>
       {/****** Q1: Start Coding here. ******/}
-        
+     
       
       <IssueFilter />
       {/****** Q1: Code ends here ******/}
