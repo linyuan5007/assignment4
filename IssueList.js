@@ -4,6 +4,8 @@ import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-ta
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TouchableOpacity } from 'react-native';
 
+
+
 import {
   SafeAreaView,
   ScrollView,
@@ -58,7 +60,7 @@ class IssueFilter extends React.Component {
       <>
       {/****** Q1: Start Coding here. ******/}
       <View style={styles.container}>
-        <Text style={styles.text}>[IssueFilter Placeholder test]</Text>
+        <Text style={styles.text}>[IssueFilter Placeholder]</Text>
       </View>
       {/****** Q1: Code ends here ******/}
       </>
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
   },
   headerCell: {
     flex: 1,
-    flexShrink: 1, // ⬅️ same for header
+    flexShrink: 1, // 
     paddingVertical: 10,
     paddingHorizontal: 8,
     textAlign: 'center',
@@ -413,7 +415,6 @@ class BlackList extends React.Component {
 
 
 
-
 export default class IssueList extends React.Component {
   constructor() {
       super();
@@ -457,7 +458,9 @@ export default class IssueList extends React.Component {
     return (
       <ScrollView contentContainerStyle={{ padding: 16}}>
       {/****** Q1: Start Coding here. ******/}
-        <IssueFilter />
+        
+      
+      <IssueFilter />
       {/****** Q1: Code ends here ******/}
 
 
@@ -477,3 +480,11 @@ export default class IssueList extends React.Component {
     );
   }
 }
+
+
+
+
+
+
+
+
