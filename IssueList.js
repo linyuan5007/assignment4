@@ -60,6 +60,17 @@ class IssueFilter extends React.Component {
       <>
       {/****** Q1: Start Coding here. ******/}
       <View style={styles.container}>
+      <Text
+          style={{
+            fontSize: 22,
+            fontWeight: 'bold',
+            textAlign: 'center',
+            marginBottom: 15,
+            color: '#2a3d66', 
+          }}
+        >
+          🔍 Filter Issues
+        </Text>
         <Text style={styles.text}>[IssueFilter Placeholder]</Text>
       </View>
       {/****** Q1: Code ends here ******/}
@@ -76,6 +87,11 @@ const width= [40,80,80,80,100,100,200];
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
   header: { flexDirection: 'row', height: 40, backgroundColor: '#537791' },
+  text: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: '#333',
+  },  
   row: {
     flexDirection: 'row',
     alignItems: 'stretch', // important for height sync
@@ -83,7 +99,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#ccc',
   },
-  
   input: {
     height: 40,
     borderColor: 'gray',
