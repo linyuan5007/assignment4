@@ -22,6 +22,14 @@ function jsonDateReviver(key, value) {
   return value;
 }
 
+function formatDateDDMMYYYY(date) {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+}
+
+
 async function graphQLFetch(query, variables = {}) {
   try {
       /****** Q4: Start Coding here. State the correct IP/port******/
@@ -182,8 +190,8 @@ function IssueRow(props) {
     issue.status,
     issue.owner,
     issue.effort,
-    new Date(issue.created).toLocaleDateString(),
-    issue.due ? new Date(issue.due).toLocaleDateString() : 'N/A',
+    formatDateDDMMYYYY(new Date(issue.created)),
+    issue.due ? formatDateDDMMYYYY(new Date(issue.due)) : 'N/A',
     issue.title,
   ];
   const rowStyle = [
