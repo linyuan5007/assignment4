@@ -3,9 +3,6 @@ import React, {useState} from 'react';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TouchableOpacity } from 'react-native';
-
-
-
 import {
   SafeAreaView,
   ScrollView,
@@ -53,6 +50,22 @@ async function graphQLFetch(query, variables = {}) {
 }
 
 
+class Home extends React.Component {
+  render() {
+    return (
+      <>
+      <View style={styles.container}>
+        <Text style={styles.sectionTitle}>🏠 Welcome Home!</Text>
+        <Text style={styles.text}>[Placeholder for Homepage]</Text>
+      </View>
+      </>
+    );
+  }
+}
+
+
+
+
 
 class IssueFilter extends React.Component {
   render() {
@@ -60,18 +73,8 @@ class IssueFilter extends React.Component {
       <>
       {/****** Q1: Start Coding here. ******/}
       <View style={styles.container}>
-      <Text
-          style={{
-            fontSize: 22,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            marginBottom: 15,
-            color: '#2a3d66', 
-          }}
-        >
-          🔍 Filter Issues
-        </Text>
-        <Text style={styles.text}>[IssueFilter Placeholder]</Text>
+        <Text style={styles.sectionTitle}>🔍 Filter Issues</Text>
+        <Text style={styles.text}>[Placeholder for IssueFilter]</Text>
       </View>
       {/****** Q1: Code ends here ******/}
       </>
@@ -81,9 +84,9 @@ class IssueFilter extends React.Component {
 
 
 
+
+
 const width= [40,80,80,80,100,100,200];
-
-
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
   header: { flexDirection: 'row', height: 40, backgroundColor: '#537791' },
@@ -113,7 +116,7 @@ const styles = StyleSheet.create({
   },  
   cell: {
     flex: 1,
-    flexShrink: 1, // ⬅️ allows text to wrap if it overflows
+    flexShrink: 1, 
     paddingVertical: 10,
     paddingHorizontal: 8,
     textAlign: 'center',
@@ -142,6 +145,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0e0e0',
     borderRadius: 5,
     marginBottom: 10,
+  },
+  navbar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: '#2a3d66',
+    paddingVertical: 12,
+    marginBottom: 10,
+  },
+  navButton: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+    textTransform: 'capitalize',
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 15,
+    color: '#2a3d66',
   },
 });
 
@@ -215,17 +238,7 @@ function IssueTable(props) {
     <ScrollView horizontal>
       <View style={styles.container}>
       {/****** Q2: Start Coding here to render the table header/rows.**********/}
-        <Text
-          style={{
-            fontSize: 22,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            marginBottom: 15,
-            color: '#2a3d66',
-          }}
-        >
-          📋 Display Issues
-        </Text>
+        <Text style={styles.sectionTitle}>📋 Display Issues</Text>
         {header}
         {issueRows}
       {/****** Q2: Coding Ends here. ******/}
@@ -263,7 +276,6 @@ class IssueAdd extends React.Component {
       showDatePicker: false 
     });
   };
-  
   /****** Q3: Code Ends here. ******/
   
   handleSubmit() {
@@ -292,17 +304,7 @@ class IssueAdd extends React.Component {
     return (
       <View style={{ marginTop: 20, padding: 10 }}>
       {/****** Q3: Start Coding here. Create TextInput field, populate state variables. Create a submit button, and on submit, trigger handleSubmit.*******/}
-      <Text
-        style={{
-          fontSize: 22,
-          fontWeight: 'bold',
-          textAlign: 'center',
-          marginBottom: 15,
-          color: '#2a3d66',
-        }}
-      >
-        📝 Add New Issue
-      </Text>
+      <Text style={styles.sectionTitle}>📝 Add New Issue</Text>
 
       <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Title:</Text>
       <TextInput
@@ -364,6 +366,8 @@ class IssueAdd extends React.Component {
 
 
 
+
+
 class BlackList extends React.Component {
   constructor() { 
     super();
@@ -394,18 +398,7 @@ class BlackList extends React.Component {
       <View style={{ marginVertical: 16, paddingHorizontal: 16 }}>
       {/****** Q4: Start Coding here. Create TextInput field, populate state variables. Create a submit button, and on submit, trigger handleSubmit.*******/}
         {/* Section Title */}
-        <Text
-          style={{
-            fontSize: 22,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            marginBottom: 15,
-            color: '#2a3d66',
-          }}
-        >
-         🔒 Blacklist a Name
-        </Text>
-
+        <Text style={styles.sectionTitle}>🔒 Blacklist a Name</Text>
 
         <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>
           Name to Blacklist:
@@ -430,11 +423,34 @@ class BlackList extends React.Component {
 
 
 
+
+class Navbar extends React.Component {
+  render() {
+    const { setActiveTab } = this.props;
+    return (
+      <View style={styles.navbar}>
+        {['home', 'filter', 'display', 'add', 'blacklist'].map(tab => (
+          <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)}>
+            <Text style={styles.navButton}>{tab.charAt(0).toUpperCase() + tab.slice(1)}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  }
+}
+
+
+
+
 export default class IssueList extends React.Component {
   constructor() {
       super();
-      this.state = { issues: [] };
+      this.state = { 
+        issues: [],
+        activeTab: 'home',
+      };
       this.createIssue = this.createIssue.bind(this);
+      this.setActiveTab = this.setActiveTab.bind(this);
   }
   
   componentDidMount() {
@@ -468,33 +484,32 @@ export default class IssueList extends React.Component {
     }
   }
   
-  
+  setActiveTab(tab) {
+    this.setState({ activeTab: tab });
+  }
+
+  renderContent() {
+    const { activeTab, issues } = this.state;
+
+    if (activeTab === 'home') return <Home />;
+    if (activeTab === 'filter') return <IssueFilter />;
+    if (activeTab === 'display') return <IssueTable issues={issues} />;
+    if (activeTab === 'add') return <IssueAdd createIssue={this.createIssue} />;
+    if (activeTab === 'blacklist') return <BlackList />;
+    return null;
+  }
+
   render() {
     return (
-      <ScrollView contentContainerStyle={{ padding: 16}}>
-      {/****** Q1: Start Coding here. ******/}
-     
-      
-      <IssueFilter />
-      {/****** Q1: Code ends here ******/}
-
-
-      {/****** Q2: Start Coding here. ******/}
-        <IssueTable issues={this.state.issues} />
-      {/****** Q2: Code ends here ******/}
-
-      
-      {/****** Q3: Start Coding here. ******/}
-        <IssueAdd createIssue={this.createIssue} />
-      {/****** Q3: Code Ends here. ******/}
-
-      {/****** Q4: Start Coding here. ******/}
-        <BlackList />
-      {/****** Q4: Code Ends here. ******/}
-      </ScrollView>     
+      <ScrollView contentContainerStyle={{ padding: 16 }}>
+        <Navbar setActiveTab={this.setActiveTab} />
+        {this.renderContent()}
+      </ScrollView>
     );
   }
 }
+
+
 
 
 

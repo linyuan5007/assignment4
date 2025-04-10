@@ -7,7 +7,6 @@
 */
 
 import React from 'react';
-import IssueList from './IssueList.js';
 import {
 SafeAreaView,
 ScrollView,
@@ -25,29 +24,34 @@ Header,
 LearnMoreLinks,
 ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import IssueList from './IssueList.js';
 
 
 
-export default class App extends React.Component
-{
-render()
-{
-return(
-<>
 
-<Text
-  style={{
+const styles = StyleSheet.create({
+  appTitle: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: '900',
     textAlign: 'center',
-    marginBottom: 15,
-    color: '#2a3d66',
-  }}
->
-Issue Tracker
-</Text>
-<IssueList/>
-</>);
+    marginVertical: 15,
+    color: '#4DA8DA',           // Light blue text
+    textShadowColor: '#D6F0FF', // Pale blue shadow
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
+  },
+});
 
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <>
+        <Text style={styles.appTitle}>Issue Tracker</Text>
+        <IssueList />
+      </>
+    );
+  }
 }
-}
+
+
